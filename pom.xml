@@ -3,7 +3,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <!-- Project from https://start.vaadin.com/project/14332520-eea0-482a-9b74-c3e107b7701b -->
+    <!-- Project from https://start.vaadin.com/project/3c14a030-cd85-4489-a671-8f737ec33629 -->
     <groupId>com.cyberoblivion.peakflow</groupId>
     <artifactId>peakflow</artifactId>
     <name>peakflow</name>
