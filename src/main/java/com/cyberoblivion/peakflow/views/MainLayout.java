@@ -1,5 +1,6 @@
 package com.cyberoblivion.peakflow.views;
 
+import com.cyberoblivion.peakflow.data.UserAccount;
 import com.cyberoblivion.peakflow.security.AuthenticatedUser;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -18,31 +19,27 @@ import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.router.Layout;
-import com.vaadin.flow.server.auth.AccessAnnotationChecker;
-import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.server.menu.MenuConfiguration;
 import com.vaadin.flow.server.menu.MenuEntry;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+
+import jakarta.annotation.security.PermitAll;
+
 import java.util.List;
 import java.util.Optional;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 
 /**
  * The main view is a top-level placeholder for other views.
  */
 @Layout
-@AnonymousAllowed
+@PermitAll
 public class MainLayout extends AppLayout {
 
     private H1 viewTitle;
 
-    private AuthenticatedUser authenticatedUser;
-    private AccessAnnotationChecker accessChecker;
-
-    public MainLayout(AuthenticatedUser authenticatedUser, AccessAnnotationChecker accessChecker) {
+    private transient AuthenticatedUser authenticatedUser;
+    public MainLayout(AuthenticatedUser authenticatedUser) {
         this.authenticatedUser = authenticatedUser;
-        this.accessChecker = accessChecker;
-
         setPrimarySection(Section.DRAWER);
         addDrawerContent();
         addHeaderContent();
@@ -59,7 +56,7 @@ public class MainLayout extends AppLayout {
     }
 
     private void addDrawerContent() {
-        Span appName = new Span("peakflow");
+        Span appName = new Span("Peak Flow");
         appName.addClassNames(LumoUtility.FontWeight.SEMIBOLD, LumoUtility.FontSize.LARGE);
         Header header = new Header(appName);
 
@@ -86,12 +83,12 @@ public class MainLayout extends AppLayout {
     private Footer createFooter() {
         Footer layout = new Footer();
 
-        Optional<OidcUser> maybeUser = authenticatedUser.get();
+        Optional<UserAccount> maybeUser = authenticatedUser.getUserAccount();
         if (maybeUser.isPresent()) {
-            OidcUser user = maybeUser.get();
+            UserAccount user = maybeUser.get();
 
-            Avatar avatar = new Avatar(user.getName());
-            avatar.setImage(user.getUserInfo().getPicture());
+            Avatar avatar = new Avatar(user.getUsername());
+            avatar.setImage(user.getPicture());
             avatar.setThemeName("xsmall");
             avatar.getElement().setAttribute("tabindex", "-1");
 
@@ -101,15 +98,15 @@ public class MainLayout extends AppLayout {
             MenuItem userName = userMenu.addItem("");
             Div div = new Div();
             div.add(avatar);
-            div.add(user.getUserInfo().getFullName());
+            div.add(user.getFullName());
             div.add(new Icon("lumo", "dropdown"));
             div.getElement().getStyle().set("display", "flex");
             div.getElement().getStyle().set("align-items", "center");
             div.getElement().getStyle().set("gap", "var(--lumo-space-s)");
             userName.add(div);
-            userName.getSubMenu().addItem("Sign out", e -> {
-                authenticatedUser.logout();
-            });
+            userName.getSubMenu().addItem("Sign out", e -> 
+                authenticatedUser.logout()
+            );
 
             layout.add(userMenu);
         } else {
