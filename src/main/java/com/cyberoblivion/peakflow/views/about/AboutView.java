@@ -1,6 +1,7 @@
 package com.cyberoblivion.peakflow.views.about;
 
 import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Paragraph;
@@ -20,16 +21,20 @@ import jakarta.annotation.security.PermitAll;
 public class AboutView extends VerticalLayout {
 
     public AboutView() {
-       setSpacing(false);
+       setSpacing(false);        
+        Image cyberImg = new Image("/images/logo_final.svg", "CyberOblivion logo");
+        Image peakflowImg = new Image("/images/peakflow.png", "PeakFlow logo");
+        Anchor cyberAnchor = new Anchor("https://blog.cyberoblivion.com");        
+        cyberAnchor.add(cyberImg);
+        cyberImg.setWidth("200px");
+        peakflowImg.setWidth("400px");
+        add(peakflowImg);
 
-        Image img = new Image("/images/logo_final.svg", "placeholder plant");
-        img.setWidth("400px");
-        add(img);
-
-        H2 header = new H2("This place intentionally left empty");
+        H2 header = new H2("Peak Flow");
         header.addClassNames(Margin.Top.XLARGE, Margin.Bottom.MEDIUM);
         add(header);
-        add(new Paragraph("It’s a place where you can grow your own UI 🤗"));
+        add(new Paragraph("By CyberOblivion 🤗"));
+        add(cyberAnchor);
 
         setSizeFull();
         setJustifyContentMode(JustifyContentMode.CENTER);
